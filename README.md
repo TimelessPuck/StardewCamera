@@ -1,4 +1,4 @@
-﻿# StardewCamera
+﻿# StardewCamera (MonoGame)
 
 This project replicates the camera system used in Stardew Valley.  
 It allows pixel art games to render nicely at any resolution by smoothing gently on non-integer scales.  
