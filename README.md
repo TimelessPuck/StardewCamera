@@ -12,7 +12,7 @@ The window resizing behavior also follow the same system as Stardew Valley.
 ## Controls
 
 - **F11** : Toggle fullscreen  
-- **Z/Q/S/D** (AZERTY) or **W/A/S/D** (QWERTY) : Move camera  
+- **Z/Q/S/D** (AZERTY) : Move camera  
 - **Arrow Up / Arrow Down** : Zoom in / Zoom out  
 - **Arrow Left / Arrow Right** : Adjust camera speed  
 - **Escape** : Quit the application  
