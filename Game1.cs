@@ -78,8 +78,6 @@ public class Game1 : Game
         UpdateWindowSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, false);
         UpdateScreenScale();
 
-        _cameraViewport = new(0, 0, _screen.Width, _screen.Height);
-
         base.Initialize();
     }
 
@@ -213,7 +211,7 @@ public class Game1 : Game
         int sw = (int)Math.Ceiling(GraphicsDevice.Viewport.Width * (1f / Zoom));
         int sh = (int)Math.Ceiling(GraphicsDevice.Viewport.Height * (1f / Zoom));
 
-        if (_screen != null) _screen.Dispose();
+        _screen?.Dispose();
         _screen = new(_graphics.GraphicsDevice, sw, sh);
 
         // Center the camera
