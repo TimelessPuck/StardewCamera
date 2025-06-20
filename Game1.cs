@@ -46,7 +46,7 @@ public class Game1 : Game
     private float _zoom = 1f;
 
 
-    private float Zoom
+    public float Zoom
     {
         get => _zoom;
         set
@@ -56,7 +56,7 @@ public class Game1 : Game
         }
     }
 
-    private float CameraSpeed
+    public float CameraSpeed
     {
         get => _cameraSpeed;
         set => _cameraSpeed = Math.Clamp(value, MIN_SPEED, MAX_SPEED);
@@ -103,7 +103,7 @@ public class Game1 : Game
         if (Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
         // Fullscreen
-        if (Keyboard.GetState().IsKeyDown(Keys.F11))
+        if (IsKeyPressed(currentKeyboardState, Keys.F11))
             UpdateWindowSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, !_graphics.IsFullScreen);
 
         // Zoom
