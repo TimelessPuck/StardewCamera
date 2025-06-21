@@ -21,8 +21,8 @@ public class Game1 : Game
 {
     public const int MIN_WINDOW_WIDTH = 1280;
     public const int MIN_WINDOW_HEIGHT = 720;
-    public const float MIN_ZOOM = 0.5f;
-    public const float MAX_ZOOM = 2.5f;
+    public const float MIN_ZOOM = 0.75f;
+    public const float MAX_ZOOM = 2f;
     public const float MIN_SPEED = 1f;
     public const float MAX_SPEED = 20f;
 
