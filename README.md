@@ -22,3 +22,9 @@ The window resizing behavior also follow the same system as Stardew Valley.
 ## License
 
 Free to use for any purpose. 
+
+---
+
+## Visuals and explanations
+
+https://www.reddit.com/r/monogame/comments/1lfl8wr/i_needed_a_camera_like_stardew_valleys_so_i/
