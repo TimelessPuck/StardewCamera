@@ -211,6 +211,10 @@ public class Game1 : Game
         int sw = (int)Math.Ceiling(GraphicsDevice.Viewport.Width * (1f / Zoom));
         int sh = (int)Math.Ceiling(GraphicsDevice.Viewport.Height * (1f / Zoom));
 
+        // Avoid odd resolutions
+        if (sw % 2 != 0) sw++;
+        if (sh % 2 != 0) sh++;
+
         _screen?.Dispose();
         _screen = new(_graphics.GraphicsDevice, sw, sh);
 
