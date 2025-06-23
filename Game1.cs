@@ -31,7 +31,7 @@ public class Game1 : Game
     private KeyboardState _previousKeyboardState;
     private CameraViewport _cameraViewport;
     private SpriteBatch _spriteBatch;
-    private RenderTarget2D _screen;
+    private RenderTarget2D _cameraScreen;
     private Texture2D _background1;
     private Texture2D _background2;
     private Texture2D _background3;
@@ -138,20 +138,20 @@ public class Game1 : Game
          * Draw sprites on the game screen *
          * * * * * * * * * * * * * * * * * */
 
-        GraphicsDevice.SetRenderTarget(_screen);
+        GraphicsDevice.SetRenderTarget(_cameraScreen);
         GraphicsDevice.Clear(Color.Black);
 
-        _spriteBatch.Begin(samplerState: SamplerState.PointClamp); // When drawing on the game screen we use PointClamp.
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp); // When drawing on the camera screen we use PointClamp.
 
         /* Example of how to draw an sprite correctly */
 
         Vector2 bgWorldPosition = Vector2.Zero;
 
-        // Make sure to floor the world position before drawing to prevent artefacts and sprite jittering with lerped camera movements.
+        // Make sure to floor the world position before drawing to prevent artefacts, and sprite jittering with lerped camera movements.
         // Note: if you're experiencing texture bleeding on animated sprite using a spritesheet: set a padding of one pixel between each frame.
         Vector2 bgRoundedPosition = new((float)Math.Floor(bgWorldPosition.X), (float)Math.Floor(bgWorldPosition.Y));
 
-        // Convert the rounded world position to camera space.
+        // Convert the floored world position to camera space.
         Vector2 bgScreenPosition = _cameraViewport.ToCameraSpace(bgRoundedPosition);
 
         // Every sprite is rendered 4 times larger.
@@ -165,15 +165,15 @@ public class Game1 : Game
 
         _spriteBatch.End();
 
-        /* * * * * * * * * * * * * * * * * * * * * *
-         * Draw the game screen on the back buffer *
-         * * * * * * * * * * * * * * * * * * * * * */
+        /* * * * * * * * * * * * * * * * * * * * * * *
+         * Draw the camera screen on the back buffer *
+         * * * * * * * * * * * * * * * * * * * * * * */
 
         GraphicsDevice.SetRenderTarget(null);
         GraphicsDevice.Clear(Color.Black);
 
         _spriteBatch.Begin(samplerState: SamplerState.LinearClamp); // When drawing on the back buffer we use LinearClamp
-        _spriteBatch.Draw(_screen, Vector2.Zero, _screen.Bounds, Color.White, 0f, Vector2.Zero, Zoom, SpriteEffects.None, 1f);
+        _spriteBatch.Draw(_cameraScreen, Vector2.Zero, _cameraScreen.Bounds, Color.White, 0f, Vector2.Zero, Zoom, SpriteEffects.None, 1f);
         _spriteBatch.End();
 
         base.Draw(gameTime);
@@ -224,12 +224,12 @@ public class Game1 : Game
         int sw = (int)Math.Ceiling(GraphicsDevice.Viewport.Width * (1f / Zoom));
         int sh = (int)Math.Ceiling(GraphicsDevice.Viewport.Height * (1f / Zoom));
 
-        _screen?.Dispose();
-        _screen = new(_graphics.GraphicsDevice, sw, sh);
+        _cameraScreen?.Dispose(); // Don't forget to dipose the render target.
+        _cameraScreen = new(_graphics.GraphicsDevice, sw, sh);
 
         // Center the camera
-        _cameraViewport.Width = _screen.Width;
-        _cameraViewport.Height = _screen.Height;
+        _cameraViewport.Width = _cameraScreen.Width;
+        _cameraViewport.Height = _cameraScreen.Height;
         _cameraViewport.Position = previousCenter - new Vector2(_cameraViewport.Width / 2f, _cameraViewport.Height / 2f);
     }
 
@@ -240,7 +240,7 @@ public class Game1 : Game
         float scale = 4f;
         Rectangle srcRect = new(0, 0, 480, 270);
 
-        Vector2 bgPosition = _cameraViewport.ToCameraSpace(new(-1920, 0)); // Note: Positions are already rounded (int, int).
+        Vector2 bgPosition = _cameraViewport.ToCameraSpace(new(-1920, 0)); // Note: Positions don't need to be floored here.
         _spriteBatch.Draw(_background2, bgPosition, srcRect, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 1f);
 
         bgPosition = _cameraViewport.ToCameraSpace(new(1920, 0));
