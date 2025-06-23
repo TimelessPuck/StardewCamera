@@ -33,5 +33,5 @@ public struct CameraViewport
         Height = height;
     }
 
-    public readonly Vector2 GetLocalPosition(Vector2 position) => new(position.X - X, position.Y - Y);
+    public readonly Vector2 ToCameraSpace(Vector2 position) => new(position.X - X, position.Y - Y);
 }

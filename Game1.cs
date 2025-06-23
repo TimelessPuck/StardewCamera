@@ -124,7 +124,7 @@ public class Game1 : Game
 
         if (dir != Vector2.Zero) dir = Vector2.Normalize(dir);
 
-        // Here we move the camera directly, but in a game, we would move the player and have the camera follow him.
+        // Here we move the camera directly, but in a game, we would move the player and have the camera following him.
         _cameraViewport.Position += dir * _cameraSpeed;
 
         _previousKeyboardState = currentKeyboardState;
@@ -134,22 +134,41 @@ public class Game1 : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        /* Draw the background (and other objects if needed) on the game screen */
+        /* * * * * * * * * * * * * * * * * *
+         * Draw sprites on the game screen *
+         * * * * * * * * * * * * * * * * * */
+
         GraphicsDevice.SetRenderTarget(_screen);
         GraphicsDevice.Clear(Color.Black);
 
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp); // When drawing on the game screen we use PointClamp.
 
-        float scale = 4f; // Every texture is (and should be) rendered 4 times larger.
-        Rectangle srcRect = new(0, 0, _background1.Width, _background1.Height);
-        Vector2 bgPosition = _cameraViewport.GetLocalPosition(Vector2.Zero); // Here we use a static position, but for a moving object use its position.
-        _spriteBatch.Draw(_background1, bgPosition, srcRect, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 1f);
+        /* Example of how to draw an sprite correctly */
 
-        DrawOtherBackgrounds(); // To make it cleaner, all the backgrounds follow the same logic as the previous one.
+        Vector2 bgWorldPosition = Vector2.Zero;
+
+        // Make sure to floor the world position before drawing to prevent artefacts and sprite jittering with lerped camera movements.
+        // Note: if you're experiencing texture bleeding on animated sprite using a spritesheet: set a padding of one pixel between each frame.
+        Vector2 bgRoundedPosition = new((float)Math.Floor(bgWorldPosition.X), (float)Math.Floor(bgWorldPosition.Y));
+
+        // Convert the rounded world position to camera space.
+        Vector2 bgScreenPosition = _cameraViewport.ToCameraSpace(bgRoundedPosition);
+
+        // Every sprite is rendered 4 times larger.
+        float scale = 4f;
+
+        Rectangle srcRect = new(0, 0, _background1.Width, _background1.Height);
+
+        _spriteBatch.Draw(_background1, bgScreenPosition, srcRect, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 1f);
+
+        DrawOtherBackgrounds(); // To make it cleaner. All the backgrounds follow the same logic as the previous one.
 
         _spriteBatch.End();
 
-        /* Draw the game screen on the back buffer */
+        /* * * * * * * * * * * * * * * * * * * * * *
+         * Draw the game screen on the back buffer *
+         * * * * * * * * * * * * * * * * * * * * * */
+
         GraphicsDevice.SetRenderTarget(null);
         GraphicsDevice.Clear(Color.Black);
 
@@ -185,18 +204,12 @@ public class Game1 : Game
             _isResizing = true;
 
             // Resize the window if it's too small
-            bool shouldApplyChanges = false;
             if (GraphicsDevice.Viewport.Width < MIN_WINDOW_HEIGHT)
             {
                 _graphics.PreferredBackBufferWidth = MIN_WINDOW_WIDTH;
-                shouldApplyChanges = true;
-            }
-            if (GraphicsDevice.Viewport.Height < MIN_WINDOW_HEIGHT)
-            {
                 _graphics.PreferredBackBufferHeight = MIN_WINDOW_HEIGHT;
-                shouldApplyChanges = true;
+                _graphics.ApplyChanges();
             }
-            if (shouldApplyChanges) _graphics.ApplyChanges();
 
             UpdateScreenScale();
 
@@ -210,10 +223,6 @@ public class Game1 : Game
 
         int sw = (int)Math.Ceiling(GraphicsDevice.Viewport.Width * (1f / Zoom));
         int sh = (int)Math.Ceiling(GraphicsDevice.Viewport.Height * (1f / Zoom));
-
-        // Avoid odd resolutions
-        if (sw % 2 != 0) sw++;
-        if (sh % 2 != 0) sh++;
 
         _screen?.Dispose();
         _screen = new(_graphics.GraphicsDevice, sw, sh);
@@ -231,28 +240,28 @@ public class Game1 : Game
         float scale = 4f;
         Rectangle srcRect = new(0, 0, 480, 270);
 
-        Vector2 bgPosition = _cameraViewport.GetLocalPosition(new(-1920, 0));
+        Vector2 bgPosition = _cameraViewport.ToCameraSpace(new(-1920, 0)); // Note: Positions are already rounded (int, int).
         _spriteBatch.Draw(_background2, bgPosition, srcRect, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 1f);
 
-        bgPosition = _cameraViewport.GetLocalPosition(new(1920, 0));
+        bgPosition = _cameraViewport.ToCameraSpace(new(1920, 0));
         _spriteBatch.Draw(_background3, bgPosition, srcRect, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 1f);
 
-        bgPosition = _cameraViewport.GetLocalPosition(new(0, -1080));
+        bgPosition = _cameraViewport.ToCameraSpace(new(0, -1080));
         _spriteBatch.Draw(_background4, bgPosition, srcRect, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 1f);
 
-        bgPosition = _cameraViewport.GetLocalPosition(new(0, 1080));
+        bgPosition = _cameraViewport.ToCameraSpace(new(0, 1080));
         _spriteBatch.Draw(_background5, bgPosition, srcRect, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 1f);
 
-        bgPosition = _cameraViewport.GetLocalPosition(new(-1920, 1080));
+        bgPosition = _cameraViewport.ToCameraSpace(new(-1920, 1080));
         _spriteBatch.Draw(_background6, bgPosition, srcRect, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 1f);
 
-        bgPosition = _cameraViewport.GetLocalPosition(new(1920, 1080));
+        bgPosition = _cameraViewport.ToCameraSpace(new(1920, 1080));
         _spriteBatch.Draw(_background7, bgPosition, srcRect, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 1f);
 
-        bgPosition = _cameraViewport.GetLocalPosition(new(1920, -1080));
+        bgPosition = _cameraViewport.ToCameraSpace(new(1920, -1080));
         _spriteBatch.Draw(_background8, bgPosition, srcRect, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 1f);
 
-        bgPosition = _cameraViewport.GetLocalPosition(new(-1920, -1080));
+        bgPosition = _cameraViewport.ToCameraSpace(new(-1920, -1080));
         _spriteBatch.Draw(_background9, bgPosition, srcRect, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 1f);
     }
 }
