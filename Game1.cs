@@ -147,7 +147,7 @@ public class Game1 : Game
 
         Vector2 bgWorldPosition = Vector2.Zero;
 
-        // Make sure to floor the world position before drawing to prevent artefacts, and sprite jittering with lerped camera movements.
+        // Make sure to floor the world position before drawing to prevent sprite jittering with lerped camera movements.
         // Note: if you're experiencing texture bleeding on animated sprite using a spritesheet: set a padding of one pixel between each frame.
         Vector2 bgRoundedPosition = new((float)Math.Floor(bgWorldPosition.X), (float)Math.Floor(bgWorldPosition.Y));
 
@@ -223,6 +223,10 @@ public class Game1 : Game
 
         int sw = (int)Math.Ceiling(GraphicsDevice.Viewport.Width * (1f / Zoom));
         int sh = (int)Math.Ceiling(GraphicsDevice.Viewport.Height * (1f / Zoom));
+
+        // Avoid odd resolutions
+        if (sw % 2 != 0) sw++;
+        if (sh % 2 != 0) sh++;
 
         _cameraScreen?.Dispose(); // Don't forget to dipose the render target.
         _cameraScreen = new(_graphics.GraphicsDevice, sw, sh);
