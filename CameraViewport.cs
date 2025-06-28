@@ -2,7 +2,7 @@
 
 namespace StardewCamera;
 
-public struct CameraViewport
+public class CameraViewport
 {
     public float X { get; set; }
 
@@ -12,17 +12,17 @@ public struct CameraViewport
 
     public float Height { get; set; }
 
-    public Vector2 Position { readonly get => new(X, Y); set { X = value.X; Y = value.Y; } }
+    public Vector2 Position { get => new(X, Y); set { X = value.X; Y = value.Y; } }
 
-    public readonly float Left => X;
+    public float Left => X;
 
-    public readonly float Top => Y;
+    public float Top => Y;
 
-    public readonly float Right => X + Width;
+    public float Right => X + Width;
 
-    public readonly float Bottom => Y + Height;
+    public float Bottom => Y + Height;
 
-    public readonly Vector2 Center => new(X + (Width / 2), Y + (Height / 2));
+    public Vector2 Center => new(X + (Width / 2), Y + (Height / 2));
 
 
     public CameraViewport(float x, float y, float width, float height)
@@ -33,5 +33,5 @@ public struct CameraViewport
         Height = height;
     }
 
-    public readonly Vector2 ToCameraSpace(Vector2 position) => new(position.X - X, position.Y - Y);
+    public Vector2 ToCameraSpace(Vector2 position) => new(position.X - X, position.Y - Y);
 }

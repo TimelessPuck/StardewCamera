@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Diagnostics;
 
 namespace StardewCamera;
 
@@ -75,6 +76,8 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
+        _cameraViewport = new(0, 0, MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
+
         UpdateWindowSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, false);
         UpdateScreenScale();
 
@@ -231,9 +234,10 @@ public class Game1 : Game
         _cameraScreen?.Dispose(); // Don't forget to dipose the render target.
         _cameraScreen = new(_graphics.GraphicsDevice, sw, sh);
 
-        // Center the camera
         _cameraViewport.Width = _cameraScreen.Width;
         _cameraViewport.Height = _cameraScreen.Height;
+
+        // Center the camera
         _cameraViewport.Position = previousCenter - new Vector2(_cameraViewport.Width / 2f, _cameraViewport.Height / 2f);
     }
 
