@@ -14,7 +14,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Diagnostics;
 
 namespace StardewCamera;
 
@@ -78,8 +77,14 @@ public class Game1 : Game
     {
         _cameraViewport = new(0, 0, MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
 
-        UpdateWindowSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, false);
-        UpdateScreenScale();
+        bool isFullscreen = false;
+
+        UpdateWindowSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, isFullscreen);
+
+        // OnClientSizeChanged which call UpdateScreenScale is already called when fullscreen is enabled.
+        // So to avoid an useless called to UpdateScreenScale, we check if we start with fullscreen enabled.
+        if (!isFullscreen)
+            UpdateScreenScale();
 
         base.Initialize();
     }
