@@ -173,7 +173,6 @@ public class Game1 : Game
          * * * * * * * * * * * * * * * * * * * * * * */
 
         GraphicsDevice.SetRenderTarget(null);
-        GraphicsDevice.Clear(Color.Black);
 
         _spriteBatch.Begin(samplerState: SamplerState.LinearClamp); // When drawing on the back buffer we use LinearClamp
         _spriteBatch.Draw(_cameraScreen, Vector2.Zero, _cameraScreen.Bounds, Color.White, 0f, Vector2.Zero, Zoom, SpriteEffects.None, 1f);
