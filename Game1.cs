@@ -155,14 +155,17 @@ public class Game1 : Game
 
         Vector2 bgWorldPosition = Vector2.Zero;
 
-        // Make sure to floor the world position before drawing to prevent sprite jittering with lerped camera movements.
+        // Make sure to avoid floating world position before drawing the sprite to prevent sprite jittering with lerped camera movements.
+        // Here we multiplied the position by the scale it will be draw, then we floor it and we divide it by this scale.
+        // If we don't multiply and divide this position we end up with a position that is grid pixel perfect, and it looks very bad with a lerped camera.
         // Note: if you're experiencing texture bleeding on animated sprite using a spritesheet: set a padding of one pixel between each frame.
-        Vector2 bgRoundedPosition = new((float)Math.Floor(bgWorldPosition.X), (float)Math.Floor(bgWorldPosition.Y));
+        Vector2 bgRoundedPosition = new((float)Math.Floor(bgWorldPosition.X * 4f) / 4f, (float)Math.Floor(bgWorldPosition.Y * 4f) / 4f);
 
         // Convert the floored world position to camera space.
         Vector2 bgScreenPosition = _cameraViewport.ToCameraSpace(bgRoundedPosition);
 
         // Every sprite is rendered 4 times larger.
+        // Alternatively, you can draw all sprites at scale 1 and in the spriteBatch.Begin, use a matrix scaled by 4 with Matrix.CreateScale(4f).
         float scale = 4f;
 
         Rectangle srcRect = new(0, 0, _background1.Width, _background1.Height);
