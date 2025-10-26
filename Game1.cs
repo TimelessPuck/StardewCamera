@@ -162,10 +162,13 @@ public class Game1 : Game
         Vector2 bgRoundedPosition = new((float)Math.Floor(bgWorldPosition.X * 4f) / 4f, (float)Math.Floor(bgWorldPosition.Y * 4f) / 4f);
 
         // Convert the floored world position to camera space.
+        // Alternatively, you can draw all sprites at world position and use a translation matrix in the spriteBatch.Being:
+        // Matrix.CreateTranslation(-_cameraViewport.X, -_cameraViewport.Y)
         Vector2 bgScreenPosition = _cameraViewport.ToCameraSpace(bgRoundedPosition);
 
         // Every sprite is rendered 4 times larger.
         // Alternatively, you can draw all sprites at scale 1 and in the spriteBatch.Begin, use a matrix scaled by 4 with Matrix.CreateScale(4f).
+        // Note: If you use both alternative methods, the given matrix should be: Matrix.CreateTranslation(...) * Matrix.CreateScale(...)
         float scale = 4f;
 
         Rectangle srcRect = new(0, 0, _background1.Width, _background1.Height);
